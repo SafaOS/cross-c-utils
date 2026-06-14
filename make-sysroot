@@ -1,0 +1,35 @@
+#!/bin/sh
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+WORK_DIR=$(pwd)
+
+git submodule init
+git submodule update
+
+if [[ -z "$1" ]]; then
+    echo "Usage: [ARCH] [TARGET_DIR]"
+    echo "Expected [ARCH]"
+    exit 1
+fi
+
+if [[ -z "$2" ]]; then
+    echo "Usage: [ARCH] [TARGET_DIR]"
+    echo "Expected [TARGET_DIR]"
+    exit 1
+fi
+
+
+ARCH=$1
+TARGET=$2
+echo "Building the sysroot to '$TARGET'"
+
+mkdir -p $TARGET/usr/lib
+mkdir -p $TARGET/usr/bin
+cp $SCRIPT_DIR/config $TARGET/usr/bin || exit 1
+
+cd $SCRIPT_DIR/salibc
+./build.sh $ARCH || exit 1
+cd $WORK_DIR
+
+cp -r $SCRIPT_DIR/salibc/include $TARGET/usr/
+cp $SCRIPT_DIR/salibc/out/* $TARGET/usr/lib
+

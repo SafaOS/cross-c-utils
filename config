@@ -1,0 +1,36 @@
+#!/bin/sh
+
+has_arg() {
+    local needle="$1"
+    shift
+
+    for arg in "$@"; do
+        [[ "$arg" == "$needle" ]] && return 0
+    done
+
+    return 1
+}
+
+get_arg() {
+    local needle="$1"
+    shift
+
+    while (($#)); do
+        if [[ "$1" == "$needle" ]]; then
+            shift
+            printf '%s\n' "$1"
+            return 0
+        fi
+        shift
+    done
+
+    return 1
+}
+
+if has_arg --cflags "$@"; then
+	echo "-ffreestanding -fno-pie -fno-stack-protector -D__SAFAOS__"
+fi
+
+if has_arg --ldflags "$@"; then
+	echo "-Wl,--gc-sections -static -nostdlib -no-pie -fno-stack-protector"
+fi

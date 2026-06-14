@@ -1,0 +1,3 @@
+[submodule "salibc"]
+	path = salibc
+	url = https://github.com/SafaOS/libc
