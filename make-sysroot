@@ -2,8 +2,6 @@
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 WORK_DIR=$(pwd)
 
-git submodule init
-git submodule update
 
 if [[ -z "$1" ]]; then
     echo "Usage: [ARCH] [TARGET_DIR]"
@@ -17,7 +15,7 @@ if [[ -z "$2" ]]; then
     exit 1
 fi
 
-
+git clone https://github.com/SafaOS/libc salibc || echo "LibC already cloned, delete it in case if issues or reclone"
 ARCH=$1
 TARGET=$2
 echo "Building the sysroot to '$TARGET'"
